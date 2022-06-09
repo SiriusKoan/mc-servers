@@ -23,7 +23,7 @@ for i in range(1, 2 if only_stable else 3):
     for child in div.getchildren():
         if child.get("id"):
             link = "https://mcversions.net" + child.getchildren()[1].getchildren()[0].get("href")
-            print(f"Checking {child.get("id")}:")
+            print(f"Checking {child.get('id')}:")
             download_page = requests.get(link).content.decode()
             download_page_html = etree.HTML(download_page)
             try:
@@ -33,9 +33,9 @@ for i in range(1, 2 if only_stable else 3):
             else:
                 vers.append(child.get("id"))
                 keys.append(k)
-                print(f"Download link found: {key[-1]}")
+                print(f"Download link found: {keys[-1]}")
 
-pairs = list(zip(ver, key))
+pairs = list(zip(vers, keys))
 with open("versions.txt", "w") as f:
     for v, k in pairs:
         f.write(f"{v} {k}\n")
