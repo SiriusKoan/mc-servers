@@ -1,12 +1,7 @@
-  %%server_name%%:
+  %%SERVERNAME%%:
     build:
-      context: .
-      args:
-        SERVER_DOWNLOAD_LINK: %%SERVER_DOWNLOAD_LINK%%
-    restart: always
+      context: src/docker
     ports:
       - "%%PORT%%:25565"
     volumes:
-      - ./data/%%server_name%%:/minecraft
-    networks:
-      - net
+      - ./data/%%SERVERNAME%%:/minecraft

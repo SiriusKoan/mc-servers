@@ -1,5 +1,3 @@
-FROM openjdk:8
+FROM openjdk:17
 WORKDIR /minecraft
-ARG SERVER_DOWNLOAD_LINK
-RUN wget ${SERVER_DOWNLOAD_LINK}
 CMD ["java", "-Xmx1024M", "-Xms1024M", "-jar", "server.jar", "nogui"]
