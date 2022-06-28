@@ -109,7 +109,7 @@ printOK "Done"
 printTitle "Write settings to servers"
 for f in "${files[@]}"
 do
-    conf=$(cat config/$f | grep -v version)
+    conf=$(cat config/$f | grep -v version | grep -v port)
     echo "$conf" >> data/${f%.*}/server.properties
     # enable rcon
     echo "rcon-enable=true" >> data/${f%.*}/server.properties
