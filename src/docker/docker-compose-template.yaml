@@ -1,7 +1,9 @@
   %%SERVERNAME%%:
+    #network_mode: bridge
     build:
       context: src/docker
     ports:
       - "%%PORT%%:25565"
+      - "%%RCONPORT%%:25575"
     volumes:
       - ./data/%%SERVERNAME%%:/minecraft
