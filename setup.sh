@@ -87,8 +87,17 @@ do
         ufw allow to any port $port
     fi
 done
-echo "version: \"2\"" > docker-compose.yaml
-echo "services:" >> docker-compose.yaml
+cat > docker-compose.yaml <<EOF
+version: "2"
+networks:
+  net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.57.0/24
+
+services:
+EOF
 echo -e "$servers" >> docker-compose.yaml
 printOK "Done."
 
