@@ -66,7 +66,7 @@ echo "$count config files found."
 
 # generate docker-compose.yaml and download server.jar
 printTitle "Generate docker-compose.yaml and download server.jar"
-> rcon.txt
+> src/web/backend/rcon.txt
 for f in "${files[@]}"
 do
     # setup docker
@@ -79,7 +79,7 @@ do
     # setup basic file
     mkdir -p data/${server_name}
     wget ${download_link} -O "./data/${server_name}/server.jar"
-    echo "${server_name}:$(expr $port + 1000)" >> rcon.txt
+    echo "${server_name}:$(expr $port + 1000)" >> src/web/backend/rcon.txt
     # check firewall
     if [ $firewall ]
     then
