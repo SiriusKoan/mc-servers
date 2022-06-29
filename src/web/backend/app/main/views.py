@@ -1,26 +1,29 @@
 from os.path import exists
 from . import main_bp
-
-
-def get_rcon_map():
-    d = dict()
-    with open("rcon.txt", "r") as f:
-        line = f.readline()
-        while line:
-            server, port = line.split(":")
-            d[server] = int(port)
-    return d
+from .helper import get_seed, get_status
 
 
 @main_bp.before_app_first_request
-def check_rcon_file():
-    if not exists("rcon.txt"):
-        print("rcon.txt does not exist.")
+def check_servers_file():
+    if not exists("servers.txt"):
         exit(1)
-    else:
-        print("rcon.txt check OK")
+
+
+@main_bp.route("/api/all", methods=["GET"])
+def get_all_servers_api():
+    with open("servers.txt", "r") as f:
+        c = f.read().split("\n")
+    return str(c)
 
 
 @main_bp.route("/api/<string:server_name>", methods=["GET"])
 def get_server_info_api(server_name):
-    return server_name
+    seed = get_seed(server_name)
+    online, M, players = get_status(server_name)
+    return {
+        "name": server_name,
+        "seed": seed,
+        "online": online,
+        "max": M,
+        "players": players,
+    }

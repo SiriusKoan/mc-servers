@@ -66,7 +66,7 @@ echo "$count config files found."
 
 # generate docker-compose.yaml and download server.jar
 printTitle "Generate docker-compose.yaml and download server.jar"
-> src/web/backend/rcon.txt
+> src/web/backend/servers.txt
 for f in "${files[@]}"
 do
     # setup docker
@@ -79,7 +79,7 @@ do
     # setup basic file
     mkdir -p data/${server_name}
     wget ${download_link} -O "./data/${server_name}/server.jar"
-    echo "${server_name}:$(expr $port + 1000)" >> src/web/backend/rcon.txt
+    echo "${server_name}" >> src/web/backend/servers.txt
     # check firewall
     if [ $firewall ]
     then
@@ -121,8 +121,8 @@ do
     conf=$(cat config/$f | grep -v version | grep -v port)
     echo "$conf" >> data/${f%.*}/server.properties
     # enable rcon
-    echo "rcon-enable=true" >> data/${f%.*}/server.properties
-    echo "rcon-password=123456" >> data/${f%.*}/server.properties
+    echo "enable-rcon=true" >> data/${f%.*}/server.properties
+    echo "rcon.password=123456" >> data/${f%.*}/server.properties
 done
 printOK "Done"
 

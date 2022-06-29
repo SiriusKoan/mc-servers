@@ -14,7 +14,7 @@ services:
     build:
       context: src/web/backend
     ports:
-      - "127.0.0.1:8080:80"
+      - "127.0.0.1:8080:5000"
     volumes:
       - ./src/web/backend:/app
     networks:
