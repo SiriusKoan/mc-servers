@@ -22,12 +22,16 @@ for i in range(1, 2 if only_stable else 3):
     div = html.xpath(f"/html/body/main/div/div[2]/div[{i}]/div")[0]
     for child in div.getchildren():
         if child.get("id"):
-            link = "https://mcversions.net" + child.getchildren()[1].getchildren()[0].get("href")
+            link = "https://mcversions.net" + child.getchildren()[1].getchildren()[
+                0
+            ].get("href")
             print(f"Checking {child.get('id')}:")
             download_page = requests.get(link).content.decode()
             download_page_html = etree.HTML(download_page)
             try:
-                k = download_page_html.xpath("/html/body/main/div/div[1]/div[2]/div[1]/a")[0].get("href")
+                k = download_page_html.xpath(
+                    "/html/body/main/div/div[1]/div[2]/div[1]/a"
+                )[0].get("href")
             except:
                 print("Version is not downloadable.")
             else:
@@ -40,4 +44,6 @@ with open("versions.txt", "w") as f:
     for v, k in pairs:
         f.write(f"{v} {k}\n")
 
-print("The fetching process is done, check out versions.txt for all available versions.")
+print(
+    "The fetching process is done, check out versions.txt for all available versions."
+)
