@@ -21,8 +21,6 @@ services:
       - FLASK_ENV=production
     build:
       context: src/web/backend
-    #ports:
-      #- "127.0.0.1:8080:5000"
     volumes:
       - ./src/web/backend:/app
     networks:
@@ -30,8 +28,6 @@ services:
   frontend:
     build:
       context: src/web/frontend
-    #ports:
-      #- "127.0.0.1:3000:3000"
     volumes:
       - ./src/web/frontend:/app
     networks:

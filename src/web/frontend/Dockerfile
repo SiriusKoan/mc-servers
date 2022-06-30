@@ -2,5 +2,4 @@ FROM node:14-alpine
 WORKDIR /app
 ADD package*.json /app/
 RUN npm install
-EXPOSE 8080
-CMD ["npm", "run", "serve", "--", "--host"]
+CMD ["npm", "run", "serve", "--", "--host", "--port", "80"]
