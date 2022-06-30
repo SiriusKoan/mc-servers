@@ -1,5 +1,5 @@
 venv
 data
 docker-compose.yaml
-rcon.txt
+servers.txt
 __pycache__

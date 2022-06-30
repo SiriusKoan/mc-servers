@@ -6,7 +6,10 @@ from .helper import get_seed, get_status
 @main_bp.before_app_first_request
 def check_servers_file():
     if not exists("servers.txt"):
-        exit(1)
+        print("servers.txt does not exist.")
+        raise RuntimeError
+    else:
+        print("servers.txt exists.")
 
 
 @main_bp.route("/api/all", methods=["GET"])
