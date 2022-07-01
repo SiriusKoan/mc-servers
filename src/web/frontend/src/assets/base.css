@@ -65,7 +65,7 @@ body {
     min-height: 100vh;
     color: var(--color-text);
     background: var(--color-background-soft);
-    background-image: url(https://pixabay.com/get/gb3940ed0c5033c7903ecf55f0e13a28d8a2cd6ee85d447bc12b11b5dde2f506d62c36b49bd3f8f25d7f3cde411434141.jpg);
+    background-image: url(./src/assets/bg.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -84,9 +84,8 @@ main {
     display: flex;
     flex-wrap: wrap;
     width: 90vw;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 12px;
+    min-height: 83vh;
+    align-content: baseline;
     margin: 0 auto;
 }
 
@@ -94,4 +93,9 @@ h1 {
     text-align: center;
     padding: 20px;
     margin: 0;
+}
+
+footer {
+    height: 40px;
+    text-align: center;
 }
