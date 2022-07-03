@@ -23,6 +23,21 @@ then
     exit 1
 fi
 
+# detect OS
+# the snippet is from https://github.com/Nyr/openvpn-install/blob/master/openvpn-install.sh
+printTitle "Detect OS"
+if [ "$(grep -qs 'ubuntu' /etc/os-release)" ]
+then
+    os="ubuntu"
+elif [ -e /etc/debian_version ]
+then
+    os="debian"
+elif [ -e /etc/almalinux-release ] || [ -e /etc/rocky-release ] || [ -e /etc/centos-release ]
+then
+    os="centos"
+fi
+echo "OS is $os"
+
 echo "Welcome to use multi-mc tool"
 read -p "Are you sure you want to install necessary packages and start building the server? [y/n] " flag
 if [ "${flag}" != "y" ] && [ "${flag}" != "Y" ]
@@ -49,12 +64,22 @@ if [ $test ]
 then
     echo "Testing, skipped."
 else
-    echo "Package update..."
-    apt update
-    echo "Install Docker..."
-    apt install docker.io
-    echo "Install wget..."
-    apt install wget
+    if [ $os = "centos" ]
+    then
+        echo "Package update..."
+        dnf update
+        echo "Install Docker..."
+        dnf install docker.io
+        echo "Install wget..."
+        dnf install wget
+    else
+        echo "Package update..."
+        apt update
+        echo "Install Docker..."
+        apt install docker.io
+        echo "Install wget..."
+        apt install wget
+    fi
 fi
 
 # Check configs
@@ -78,7 +103,7 @@ do
     servers+="\n$server"
     # setup basic file
     mkdir -p data/${server_name}
-    wget ${download_link} -O "./data/${server_name}/server.jar"
+    wget -4 ${download_link} -O "./data/${server_name}/server.jar"
     echo "${server_name}" >> src/web/backend/servers.txt
     # check firewall
     if [ $firewall ]
