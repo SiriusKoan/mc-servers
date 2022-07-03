@@ -17,13 +17,22 @@ export default {
         axios
         .get('/api/all')
         .then((res) => {
-            this.servers = res['data'];
+            this.servers = Object.entries(res['data']);
             for (let i = 0; i < this.servers.length; i++) {
-                axios
-                .get('/api/' + this.servers[i])
-                .then((res) => {
-                    this.servers_info.push(res['data']);
-                })
+                if (this.servers[i][1]) {
+                    axios
+                    .get('/api/' + this.servers[i][0])
+                    .then((res) => {
+                        res['data']['status'] = 'active';
+                        this.servers_info.push(res['data']);
+                    })
+                }
+                else {
+                    this.servers_info.push({
+                        'status': 'inactive',
+                        'name': this.servers[i][0]
+                    });
+                }
             }
         })
     }
@@ -33,7 +42,7 @@ export default {
 <template>
   <h1>Minecraft Servers</h1>
   <main>
-    <Card v-for="server in servers_info" :name="server.name" :players="server.players" :seed="server.seed" :max="server.max" :online="server.online" />
+    <Card v-for="server in servers_info" :class="server.status" :status="server.status" :name="server.name" :players="server.players" :seed="server.seed" :max="server.max" :online="server.online" />
   </main>
   <footer>
       <Copyright />
