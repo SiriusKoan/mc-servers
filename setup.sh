@@ -35,6 +35,9 @@ then
 elif [ -e /etc/almalinux-release ] || [ -e /etc/rocky-release ] || [ -e /etc/centos-release ]
 then
     os="centos"
+else
+    printError "Your OS is not supported."
+    exit 2
 fi
 echo "OS is $os"
 
@@ -48,14 +51,26 @@ fi
 
 # check firewall
 printTitle "Check Firewall"
-if [ -z "$(ufw status | grep active)" ]
+if [ $os = "centos" ]
 then
-    # inactive or disabled
-    echo "UFW is off."
-    firewall=0
+    if [ -z "$(firewall-cmd --state | grep 'not running')" ]
+    then
+        echo "Firewalld is on"
+        firewall=1
+    else
+        echo "Firewalld is off"
+        firewall=0
+    fi
 else
-    echo "UFW is on."
-    firewall=1
+    if [ -z "$(ufw status | grep active)" ]
+    then
+        # inactive or disabled
+        echo "UFW is off."
+        firewall=0
+    else
+        echo "UFW is on."
+        firewall=1
+    fi
 fi
 
 # install necessary packages
@@ -67,18 +82,22 @@ else
     if [ $os = "centos" ]
     then
         echo "Package update..."
-        dnf update
+        dnf update -y
         echo "Install Docker..."
-        dnf install docker.io
+        dnf install -y yum-utils
+        yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+        dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+        curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
         echo "Install wget..."
-        dnf install wget
+        dnf install -y wget
     else
         echo "Package update..."
-        apt update
+        apt update -y
         echo "Install Docker..."
-        apt install docker.io
+        apt install -y docker.io
         echo "Install wget..."
-        apt install wget
+        apt install -y wget
     fi
 fi
 
@@ -109,7 +128,13 @@ do
     if [ $firewall ]
     then
         echo "Firewall is enabled, allow traffic to $port"
-        ufw allow to any port $port
+        if [ $os = "centos" ]
+        then
+            firewall-cmd --add-port="$port/tcp" --permanent
+            firewall-cmd --reload
+        else
+            ufw allow to any port $port
+        fi
     fi
 done
 cat > docker-compose.yaml <<EOF
