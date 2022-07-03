@@ -26,7 +26,7 @@ fi
 # detect OS
 # the snippet is from https://github.com/Nyr/openvpn-install/blob/master/openvpn-install.sh
 printTitle "Detect OS"
-if [ "$(grep -qs 'ubuntu' /etc/os-release)" ]
+if [ "$(grep 'ubuntu' /etc/os-release)" ]
 then
     os="ubuntu"
 elif [ -e /etc/debian_version ]
@@ -75,9 +75,9 @@ fi
 
 # install necessary packages
 printTitle "Install Necessary Packages"
-if [ $test ]
+if [ $install -eq 0 ]
 then
-    echo "Testing, skipped."
+    echo "Skip package installation by user."
 else
     if [ $os = "centos" ]
     then
@@ -153,8 +153,13 @@ printOK "Done."
 
 # generate server files by running docker-compose
 printTitle "Generate necessary server files"
+systemctl start docker
 docker-compose up -d
 printOK "Done"
+
+# wait for server files created
+printTitle "Wait for server files created"
+sleep 5
 
 # sign eula
 printTitle "Sign EULA"
