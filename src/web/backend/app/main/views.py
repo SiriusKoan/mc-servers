@@ -1,7 +1,7 @@
 from os.path import exists
-from flask import jsonify
+from flask import jsonify, request
 from . import main_bp
-from .helper import get_seed, get_status
+from .helper import get_seed, get_status, send_command
 
 
 @main_bp.before_app_first_request
@@ -21,14 +21,19 @@ def get_all_servers_api():
     return jsonify(c)
 
 
-@main_bp.route("/api/<string:server_name>", methods=["GET"])
+@main_bp.route("/api/<string:server_name>", methods=["GET", "POST"])
 def get_server_info_api(server_name):
-    seed = get_seed(server_name)
-    online, M, players = get_status(server_name)
-    return {
-        "name": server_name,
-        "seed": seed,
-        "online": online,
-        "max": M,
-        "players": players,
-    }
+    if request.method == "GET":
+        seed = get_seed(server_name)
+        online, M, players = get_status(server_name)
+        return {
+            "name": server_name,
+            "seed": seed,
+            "online": online,
+            "max": M,
+            "players": players,
+        }
+    if request.method == "POST":
+        data = request.get_json(force=True)
+        command = data["command"]
+        return send_command(server_name, command)

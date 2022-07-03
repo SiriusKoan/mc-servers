@@ -14,3 +14,11 @@ def get_status(server_name):
         M = players_info.max
         players = [player.name for player in players_info.players]
         return online, M, players
+
+
+def send_command(server_name, command):
+    with Client(server_name, 25575, passwd="123456") as client:
+        try:
+            return client.run(command)
+        except Exception as e:
+            return str(e)

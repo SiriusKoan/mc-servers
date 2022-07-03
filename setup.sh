@@ -62,24 +62,24 @@ then
         firewall=0
     fi
 else
-    if [ -z "$(ufw status | grep active)" ]
+    if [ -z "$(ufw status | grep inactive)" ]
     then
         # inactive or disabled
-        echo "UFW is off."
-        firewall=0
-    else
         echo "UFW is on."
         firewall=1
+    else
+        echo "UFW is off."
+        firewall=0
     fi
 fi
 
 # install necessary packages
 printTitle "Install Necessary Packages"
-if [ $install -eq 0 ]
+if [ "$install" -eq 0 ]
 then
     echo "Skip package installation by user."
 else
-    if [ $os = "centos" ]
+    if [ "$os" = "centos" ]
     then
         echo "Package update..."
         dnf update -y
