@@ -1,5 +1,5 @@
 FROM node:14-alpine
 WORKDIR /app
-ADD package*.json /app/
+ADD . /app/
 RUN npm install
 CMD ["npm", "run", "serve", "--", "--host", "--port", "80"]
