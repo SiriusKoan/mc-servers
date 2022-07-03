@@ -2,6 +2,14 @@ import re
 from mcipc.rcon.je import Client
 
 
+def test_rcon_connection(server_name):
+    try:
+        with Client(server_name, 25575, passwd="123456") as client:
+            pass
+        return True
+    except:
+        return False
+
 def get_seed(server_name):
     with Client(server_name, 25575, passwd="123456") as client:
         return client.seed
