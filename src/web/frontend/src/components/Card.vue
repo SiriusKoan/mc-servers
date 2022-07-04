@@ -5,7 +5,7 @@
                 <span>Name: </span>
                 <span>{{ server.name }}</span>
             </div>
-            <div class="label">
+            <div class="label" v-if="server.status === 'inactive'">
                 <span>Status: </span>
                 <span>{{ server.status }}</span>
             </div>
@@ -15,19 +15,21 @@
                     <span>{{ server.seed }}</span>
                 </div>
                 <div class="label">
-                    <span>Status: </span>
+                    <span>Online: </span>
                     <span>{{ server.online }} / {{ server.max }}</span>
                 </div>
                 <div class="label">
                     <span>Players: </span>
                     <span v-for="player in server.players">{{ player }} </span>
                 </div>
-                <div class="label">
-                    <input type="text" placeholder="Command" v-model="command">
+                <hr>
+                <div class="command">
+                    <input type="text" placeholder="/command" v-model="command">
                     <button @click="sendCommandSignal">Send</button>
                 </div>
-                <div class="message" v-if="message" :class="status">
-                    {{ message }}
+                <div class="message" :class="status">
+                    <span>&#62; </span>
+                    <span>{{ message }}</span>
                 </div>
             </div>
         </div>
@@ -52,6 +54,13 @@ export default {
 </script>
 
 <style>
+@import "../assets/input.css";
+
+hr {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
 .container {
     padding: 5px;
     margin: 10px;
@@ -59,7 +68,7 @@ export default {
     -webkit-box-shadow: 0px 0px 6px 1px rgba(255,255,255,0.75);
     -moz-box-shadow: 0px 0px 6px 1px rgba(255,255,255,0.75);
     width: 330px;
-    height: 170px;
+    height: 220px;
     border-radius: 7px;
     display: flex;
     flex-direction: column;
@@ -81,19 +90,32 @@ export default {
     opacity: 0.5;
 }
 
+.command input {
+    font-family: Consolas;
+}
+
 .message {
+    word-wrap: break-word;
+    width: 250px;
     color: white;
     display: block;
-    margin: 10px auto;
-	padding: 20px;
-	box-shadow: 3px 2px 10px 1px rgba(0, 0, 0, 0.3);
+    margin: 5px auto;
+    padding: 5px;
+    border: 1px solid white;
+    background-color: rgba(0, 0, 0, 0.4);
+    font-family: Consolas;
+    font-size: 12px;
 }
 
-.success {
-    background-color: #04AA6D;
+.message span:first-child {
+    user-select: none;
 }
 
-.error {
-    background-color: #f44336;
+.success span:first-child {
+    color: #04AA6D;
+}
+
+.error span:first-child {
+    color: #f44336;
 }
 </style>
