@@ -1,5 +1,6 @@
 import re
 from mcipc.rcon.je import Client
+import mcipc.rcon.errors
 
 
 def test_rcon_connection(server_name):
@@ -9,6 +10,7 @@ def test_rcon_connection(server_name):
         return True
     except:
         return False
+
 
 def get_seed(server_name):
     with Client(server_name, 25575, passwd="123456") as client:
@@ -28,5 +30,9 @@ def send_command(server_name, command):
     with Client(server_name, 25575, passwd="123456") as client:
         try:
             return client.run(command)
-        except Exception as e:
-            return str(e)
+        except mcipc.rcon.errors.UnknownCommand:
+            return "Error: Unknown command", 400
+        except mcipc.rcon.errors.InvalidArgument:
+            return "Error: Invalid arguments", 400
+        except:
+            return "Error: Unknown error", 400

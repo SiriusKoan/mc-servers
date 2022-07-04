@@ -38,5 +38,7 @@ def get_server_info_api(server_name):
         }
     if request.method == "POST":
         data = request.get_json(force=True)
-        command = data["command"]
+        command = data.get("command", None)
+        if not command:
+            return "Error: No command provided", 400
         return send_command(server_name, command)
