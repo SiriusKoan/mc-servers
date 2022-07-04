@@ -28,5 +28,7 @@ services:
   frontend:
     build:
       context: src/web/frontend
+    #volumes:
+    #  - ./src/web/frontend:/app
     networks:
       - net
