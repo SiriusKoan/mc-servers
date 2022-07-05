@@ -18,9 +18,9 @@
                     <span>Online: </span>
                     <span>{{ server.online }} / {{ server.max }}</span>
                 </div>
-                <div class="label">
-                    <span>Players: </span>
-                    <span v-for="player in server.players">{{ player }} </span>
+                <div class="label players" @mouseover="sendMouseOverSignal" @mouseleave="sendMouseLeaveSignal">
+                    <div>Players</div>
+                    <div v-for="player in server.players" v-if="show_players">{{ player }} </div>
                 </div>
                 <hr>
                 <div class="command">
@@ -43,11 +43,18 @@ export default {
         server: null,
         command: String,
         message: String,
-        status: String
+        status: String,
+        show_players: Boolean
     },
     methods: {
         sendCommandSignal() {
             this.$emit('send', this.server.name, this.command);
+        },
+        sendMouseOverSignal() {
+            this.$emit('over');
+        },
+        sendMouseLeaveSignal() {
+            this.$emit('leave');
         }
     }
 }
@@ -77,8 +84,30 @@ hr {
     border: 1px white solid;
 }
 
-.label span:first-child {
+.label > *:first-child {
     font-weight: bold;
+}
+
+.players div:not(:first-child) {
+    width: 200px;
+    position: fixed;
+    z-index: 100;
+    color: black;
+    background-color: rgb(255, 255, 255);
+    padding: 3px;
+}
+
+.players {
+    width: fit-content;
+}
+
+.players div:first-child {
+    cursor: pointer;
+}
+
+.players div:first-child:after {
+    content: '▼';
+    display: inline-block;
 }
 
 .active {

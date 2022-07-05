@@ -6,6 +6,7 @@ export default {
         return {
             messages: {},
             status: {},
+            show: {},
             servers: null,
             //servers_info: [{"name": "1"}, {"name": "2"}, {"name": "3"}, {"name": "4"}, {"name": "5"}]
             servers_info: []
@@ -61,7 +62,16 @@ export default {
 <template>
   <h1>Minecraft Servers</h1>
   <main>
-      <Card v-for="server in servers_info" :class="server.status" v-bind="{ server }" :message="messages[server.name]" :status="status[server.name]" @send="sendCommand" />
+      <Card 
+      v-for="server in servers_info"
+      :class="server.status"
+      v-bind="{ server }"
+      :message="messages[server.name]"
+      :status="status[server.name]"
+      :show_players="show[server.name]"
+      @send="sendCommand"
+      @over="show[server.name]=true"
+      @leave="show[server.name]=false" />
   </main>
   <footer>
       <Copyright />
