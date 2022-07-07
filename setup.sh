@@ -154,18 +154,17 @@ printOK "Done."
 # generate server files by running docker-compose
 printTitle "Generate necessary server files"
 systemctl start docker
+docker build -t mcserver src/docker
 docker-compose up -d
-printOK "Done"
-
-# wait for server files created
-printTitle "Wait for server files created"
+# wait for server files generated
 sleep 5
+printOK "Done"
 
 # sign eula
 printTitle "Sign EULA"
 for f in "${files[@]}"
 do
-    sed -i "s/false/true/" data/${f%.*}/eula.txt
+    sed -i "s/false/true/" "data/${f%.*}/eula.txt"
 done
 printOK "Done"
 
