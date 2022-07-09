@@ -7,6 +7,7 @@ export default {
             messages: {},
             status: {},
             show: {},
+            commands: {},
             servers: null,
             //servers_info: [{"name": "1"}, {"name": "2"}, {"name": "3"}, {"name": "4"}, {"name": "5"}]
             servers_info: []
@@ -57,10 +58,10 @@ export default {
                 }
             })
         },
-        sendCommand(server_name, command) {
+        sendCommand(server_name) {
             axios
             .post(`/api/${server_name}`, {
-                'command': command
+                'command': this.commands[server_name]
             })
             .then((res) => {
                 this.status[server_name] = 'success';
@@ -70,13 +71,17 @@ export default {
                 this.status[server_name] = 'error';
                 this.messages[server_name] = err['response']['data'];
             })
+        },
+        updateCommand(server_name, command) {
+            this.commands[server_name] = command;
         }
     },
     mounted() {
         this.updateData();
         window.setInterval(() => {
             this.updateData();
-        }, 2500);
+            //console.log('update');
+        }, 2000);
     }
 }
 </script>
@@ -86,14 +91,16 @@ export default {
   <main>
       <Card 
       v-for="server in servers_info"
-      :class="server.status"
       v-bind="{ server }"
+      :class="server.status"
       :message="messages[server.name]"
       :status="status[server.name]"
       :show_players="show[server.name]"
+      :command="commands[server.name]"
       @send="sendCommand"
       @over="show[server.name]=true"
-      @leave="show[server.name]=false" />
+      @leave="show[server.name]=false"
+      @input="updateCommand" />
   </main>
   <footer>
       <Copyright />

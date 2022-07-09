@@ -24,7 +24,7 @@
                 </div>
                 <hr>
                 <div class="command">
-                    <input type="text" placeholder="/command" v-model="command">
+                    <input type="text" placeholder="/command" :value="command" @input="sendInputSignal">
                     <button @click="sendCommandSignal">Send</button>
                 </div>
                 <div class="message" :class="status">
@@ -51,13 +51,16 @@ export default {
     },
     methods: {
         sendCommandSignal() {
-            this.$emit('send', this.server.name, this.command);
+            this.$emit('send', this.server.name);
         },
         sendMouseOverSignal() {
             this.$emit('over');
         },
         sendMouseLeaveSignal() {
             this.$emit('leave');
+        },
+        sendInputSignal(event) {
+            this.$emit('input', this.server.name, event.target.value);
         }
     }
 }
