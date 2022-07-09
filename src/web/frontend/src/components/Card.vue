@@ -41,7 +41,10 @@ export default {
     name: 'Card',
     props: {
         server: null,
-        command: String,
+        command: {
+            type: String,
+            default: '/'
+        },
         message: String,
         status: String,
         show_players: Boolean

@@ -17,8 +17,47 @@ export default {
         Copyright
     },
     methods: {
+        update(data, name) {
+            let f = false;
+            for (let i = 0; i < this.servers_info.length; i++) {
+                if (this.servers_info[i]['name'] == name) {
+                    this.servers_info[i] = data;
+                    f = true;
+                    break;
+                }
+            }
+            if (!f) {
+                this.servers_info.push(data);
+            }
+        },
+        updateData() {
+            axios
+            .get('/api/all')
+            .then((res) => {
+                this.servers = Object.entries(res['data']);
+                for (let i = 0; i < this.servers.length; i++) {
+                    let data = {};
+                    let name = this.servers[i][0];
+                    if (this.servers[i][1]) {
+                        axios
+                        .get(`/api/${this.servers[i][0]}`)
+                        .then((res) => {
+                            res['data']['status'] = 'active';
+                            data = res['data'];
+                            this.update(data, name);
+                        })
+                    }
+                    else {
+                        data = {
+                            'status': 'inactive',
+                            'name': name
+                        }
+                        this.update(data, name);
+                    }
+                }
+            })
+        },
         sendCommand(server_name, command) {
-            console.log(server_name, command);
             axios
             .post(`/api/${server_name}`, {
                 'command': command
@@ -34,27 +73,10 @@ export default {
         }
     },
     mounted() {
-        axios
-        .get('/api/all')
-        .then((res) => {
-            this.servers = Object.entries(res['data']);
-            for (let i = 0; i < this.servers.length; i++) {
-                if (this.servers[i][1]) {
-                    axios
-                    .get(`/api/${this.servers[i][0]}`)
-                    .then((res) => {
-                        res['data']['status'] = 'active';
-                        this.servers_info.push(res['data']);
-                    })
-                }
-                else {
-                    this.servers_info.push({
-                        'status': 'inactive',
-                        'name': this.servers[i][0]
-                    });
-                }
-            }
-        })
+        this.updateData();
+        window.setInterval(() => {
+            this.updateData();
+        }, 2500);
     }
 }
 </script>
