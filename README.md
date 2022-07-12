@@ -52,5 +52,36 @@ If you already have a server, then you only need to give it a name (and create c
 
 After the process is over, move the whole directory to `data` directory and name it, but remember NOT to override `server.jar`.
 
+## More Operations
+This section is for those who are familiar with server management.
+
+### Reconfigure
+If you change some config files, you can rerun `setup.sh` after running `sudo docker-compose down`.
+
+If you don't want to rely on this system but want to change `server.properties` in `data/[server name]` directly, you can update the settings and run the command.
+```
+$ sudo docker restart mcservers_[server name]_1
+```
+
+(For example, if your server name is `mc1`, then run `sudo docker restart mcservers_mc1_1`)
+
+The command will restart the container, and your settings will take effect.
+
+### Check & Debug
+As the instructions say, run the following command can see all servers.
+```
+$ sudo docker-compose ps
+```
+
+If you see one container is crashed, you can run the following command to start it.
+```
+$ sudo docker start [container name shown on the previous command]
+```
+
+If it keeps crashing, you can try to figure it out the reasons and report an issue by checking its log.
+```
+$ sudo docker logs [container name]
+```
+
 ## Screenshot
 ![image](https://user-images.githubusercontent.com/26023540/177333894-3a411717-3919-4919-b8b3-99d1b93cd515.png)
