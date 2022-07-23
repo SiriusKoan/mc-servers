@@ -14,7 +14,7 @@ def test_rcon_connection(server_name):
 
 def get_seed(server_name):
     with Client(server_name, 25575, passwd="123456") as client:
-        return client.seed
+        return str(client.seed)
 
 
 def get_status(server_name):
